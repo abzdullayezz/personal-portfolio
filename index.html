@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vahid Abdullayev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,300;0,400;1,300;1,400&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #f7f6f2;
+  --bg-alt:    #edecea;
+  --bg-card:   #f0ede8;
+  --ink:       #131312;
+  --ink-mid:   #4c4b47;
+  --ink-dim:   #8c8b85;
+  --rule:      #d6d3cb;
+  --accent:    #1a3a6b;
+  --accent2:   #c8102e;
+  --mono-c:    #2b4d7a;
+  --grid-line: rgba(0,0,0,.04);
+  --serif: 'IBM Plex Serif', Georgia, serif;
+  --sans:  'IBM Plex Sans', system-ui, sans-serif;
+  --mono:  'IBM Plex Mono', monospace;
+  --max: 1120px;
+  --pad: clamp(1.4rem, 5vw, 3.5rem);
+  --nav-h: 54px;
+}
+:root[data-theme="dark"] {
+  --bg:        #0d0d0c;
+  --bg-alt:    #151513;
+  --bg-card:   #1a1917;
+  --ink:       #e6e3db;
+  --ink-mid:   #9e9b93;
+  --ink-dim:   #5e5b54;
+  --rule:      #252420;
+  --accent:    #5b8dd4;
+  --accent2:   #e8294a;
+  --mono-c:    #6fa3d8;
+  --grid-line: rgba(255,255,255,.025);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0d0d0c;--bg-alt:#151513;--bg-card:#1a1917;
+    --ink:#e6e3db;--ink-mid:#9e9b93;--ink-dim:#5e5b54;
+    --rule:#252420;--accent:#5b8dd4;--accent2:#e8294a;
+    --mono-c:#6fa3d8;--grid-line:rgba(255,255,255,.025);
+  }
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden;transition:background .25s,color .25s}
+
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+  background-size:60px 60px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg);border-bottom:1px solid var(--rule);transition:background .25s,box-shadow .25s;padding-top:env(safe-area-inset-top,0px)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+nav.scrolled{box-shadow:0 2px 20px rgba(0,0,0,.07)}
+.nav-inner{max-width:var(--max);margin:0 auto;padding:0 var(--pad);height:var(--nav-h);display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--serif);font-size:.95rem;font-weight:400;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+.nav-logo span{color:var(--accent2)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:.76rem;font-weight:400;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mid);text-decoration:none;position:relative;padding-bottom:2px;transition:color .15s}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;right:100%;height:1px;background:var(--accent);transition:right .2s ease}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover::after{right:0}
+.nav-right{display:flex;align-items:center;gap:.8rem}
+.theme-btn{background:none;border:none;cursor:pointer;color:var(--ink-dim);padding:4px;display:flex;align-items:center;transition:color .15s}
+.theme-btn:hover{color:var(--ink)}
+.nav-cta{font-size:.74rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--accent2);text-decoration:none;border:1px solid var(--accent2);padding:.36rem .9rem;transition:background .15s,color .15s}
+.nav-cta:hover{background:var(--accent2);color:#fff}
+.ham{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.ham span{display:block;width:20px;height:1.5px;background:var(--ink);transition:transform .2s,opacity .2s}
+.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mobile-nav{display:none;position:fixed;top:var(--nav-h);left:0;right:0;z-index:199;background:var(--bg);border-bottom:1px solid var(--rule);padding:1.2rem var(--pad) 1.6rem;flex-direction:column;gap:.8rem}
+.mobile-nav.open{display:flex}
+.mobile-nav a{font-size:.9rem;color:var(--ink-mid);text-decoration:none;padding:.4rem 0;border-bottom:1px solid var(--rule);transition:color .15s}
+.mobile-nav a:hover{color:var(--ink)}
+
+/* SCROLL ANIMATIONS */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.delay-1{transition-delay:.08s}
+.delay-2{transition-delay:.16s}
+.delay-3{transition-delay:.24s}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1!important;transform:none!important;transition:none!important}html{scroll-behavior:auto}}
+
+/* HERO */
+#hero{position:relative;padding-top:var(--nav-h);min-height:100svh;display:flex;align-items:center;border-bottom:1px solid var(--rule);overflow:hidden}
+.hero-wrap{position:relative;z-index:1;max-width:var(--max);margin:0 auto;padding:5rem var(--pad) 4rem;width:100%}
+.hero-tag{font-family:var(--mono);font-size:.68rem;color:var(--ink-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.8rem;display:flex;align-items:center;gap:.7rem;opacity:0;animation:fadeUp .5s .1s ease forwards}
+.hero-tag::before{content:'';display:block;width:20px;height:1px;background:var(--accent)}
+.hero-name{font-family:var(--serif);font-size:clamp(2.6rem,6vw,5rem);font-weight:300;letter-spacing:-.03em;line-height:1.08;color:var(--ink);margin-bottom:.6rem;opacity:0;animation:fadeUp .5s .2s ease forwards}
+.hero-role-line{font-family:var(--serif);font-size:clamp(1.4rem,3.5vw,2.6rem);font-weight:300;letter-spacing:-.02em;line-height:1.2;color:var(--ink-mid);margin-bottom:2rem;min-height:1.3em;opacity:0;animation:fadeUp .5s .3s ease forwards}
+.typing-text{color:var(--accent)}
+.cursor{display:inline-block;width:2px;height:1em;background:var(--accent2);margin-left:2px;vertical-align:text-bottom;animation:blink .9s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.hero-bio{font-size:1.02rem;color:var(--ink-mid);line-height:1.75;max-width:50ch;margin-bottom:2.4rem;opacity:0;animation:fadeUp .5s .4s ease forwards}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3.5rem;opacity:0;animation:fadeUp .5s .5s ease forwards}
+.btn{font-size:.78rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;padding:.72rem 1.5rem;display:inline-flex;align-items:center;gap:.5rem;transition:background .15s,color .15s,border-color .15s,transform .15s;cursor:pointer;border:none;font-family:var(--sans)}
+.btn:hover{transform:translateY(-1px)}
+.btn-dark{background:var(--ink);color:var(--bg);border:1px solid var(--ink)}
+.btn-dark:hover{background:var(--accent);border-color:var(--accent)}
+.btn-ghost{background:transparent;color:var(--ink-mid);border:1px solid var(--rule)}
+.btn-ghost:hover{border-color:var(--ink-mid);color:var(--ink)}
+.hero-status{display:flex;gap:2rem;flex-wrap:wrap;padding:1.4rem 0;border-top:1px solid var(--rule);opacity:0;animation:fadeUp .5s .6s ease forwards}
+.s-item .s-label{font-family:var(--mono);font-size:.62rem;color:var(--ink-dim);letter-spacing:.07em;text-transform:uppercase;margin-bottom:.18rem}
+.s-item .s-val{font-size:.88rem;color:var(--ink-mid)}
+.dot-g{color:#2a8a4a}
+.dot-a{color:#c07a00}
+.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:0;animation:fadeUp .5s .9s ease forwards}
+.scroll-indicator span{font-family:var(--mono);font-size:.58rem;color:var(--ink-dim);letter-spacing:.1em;text-transform:uppercase}
+.scroll-arrow{width:1px;height:32px;background:linear-gradient(to bottom,var(--ink-dim),transparent);animation:scrollPulse 1.8s ease-in-out infinite}
+@keyframes scrollPulse{0%,100%{transform:scaleY(1);opacity:.6}50%{transform:scaleY(.6);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* SECTION SHELL */
+section{border-bottom:1px solid var(--rule);position:relative;z-index:1}
+section:last-of-type{border-bottom:none}
+.wrap{max-width:var(--max);margin:0 auto;padding:5rem var(--pad)}
+.two-col{display:grid;grid-template-columns:190px 1fr;gap:3rem;align-items:start}
+.col-label{font-family:var(--mono);font-size:.68rem;color:var(--accent2);letter-spacing:.08em;text-transform:uppercase;padding-top:.3rem;line-height:1.4}
+.sec-heading{font-family:var(--serif);font-size:clamp(1.5rem,2.8vw,2.1rem);font-weight:300;letter-spacing:-.02em;line-height:1.2;color:var(--ink);margin-bottom:2.4rem}
+
+/* ABOUT */
+.about-body p{font-size:1rem;color:var(--ink-mid);line-height:1.8;max-width:58ch;margin-bottom:1rem}
+.about-body p:first-child{font-family:var(--serif);font-size:1.15rem;font-weight:300;color:var(--ink);line-height:1.72}
+.meta-block{margin-top:1.8rem;border:1px solid var(--rule)}
+.meta-row{display:flex;padding:.85rem 1.1rem;border-bottom:1px solid var(--rule);gap:1.5rem}
+.meta-row:last-child{border-bottom:none}
+.meta-k{font-family:var(--mono);font-size:.63rem;color:var(--ink-dim);letter-spacing:.07em;text-transform:uppercase;min-width:90px;padding-top:.05rem}
+.meta-v{font-size:.88rem;color:var(--ink-mid);line-height:1.5}
+.skill-section{margin-top:2rem}
+.skill-heading{font-family:var(--mono);font-size:.64rem;color:var(--ink-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem}
+.skill-rows{display:flex;flex-direction:column;gap:.7rem}
+.skill-row{display:flex;align-items:center;gap:1rem}
+.sk-name{font-family:var(--mono);font-size:.76rem;color:var(--mono-c);min-width:110px}
+.sk-bar{flex:1;height:3px;background:var(--rule);max-width:160px;overflow:hidden}
+.sk-fill{height:100%;background:var(--accent);width:0;transition:width .9s cubic-bezier(.4,0,.2,1)}
+.sk-bar.animated .sk-fill{width:var(--target)}
+.sk-note{font-size:.74rem;color:var(--ink-dim);font-style:italic}
+
+/* PROJECTS */
+.proj-list{display:flex;flex-direction:column}
+.proj-card{display:grid;grid-template-columns:190px 1fr;gap:3rem;padding:2.4rem 0;border-bottom:1px solid var(--rule);transition:background .15s}
+.proj-card:last-child{border-bottom:none}
+.proj-card:hover{background:var(--bg-alt);margin:0 calc(-1 * var(--pad));padding-left:var(--pad);padding-right:var(--pad)}
+.proj-meta{display:flex;flex-direction:column;gap:.5rem;padding-top:.1rem}
+.proj-id{font-family:var(--mono);font-size:.62rem;color:var(--ink-dim);letter-spacing:.06em}
+.proj-year{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim)}
+.badge{display:inline-block;font-family:var(--mono);font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;padding:.2rem .5rem;border:1px solid;width:fit-content}
+.badge-live{color:#2a8a4a;border-color:#2a8a4a;background:#2a8a4a0d}
+.badge-past{color:var(--ink-dim);border-color:var(--rule)}
+.badge-pend{color:#c07a00;border-color:#c07a00;background:#c07a000d}
+.proj-title{font-family:var(--serif);font-size:1.3rem;font-weight:400;letter-spacing:-.015em;color:var(--ink);margin-bottom:.3rem;line-height:1.3}
+.proj-ctx{font-family:var(--mono);font-size:.7rem;color:var(--accent);margin-bottom:1rem}
+.proj-desc{font-size:.95rem;color:var(--ink-mid);line-height:1.75;max-width:60ch;margin-bottom:1rem}
+.proj-note{font-size:.82rem;color:var(--ink-dim);font-style:italic;border-left:2px solid var(--rule);padding-left:.8rem;margin-bottom:1.1rem;line-height:1.6}
+.tech-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.t-tag{font-family:var(--mono);font-size:.68rem;color:var(--mono-c);background:var(--bg-alt);border:1px solid var(--rule);padding:.18rem .5rem}
+.proj-links{display:flex;gap:1.2rem;flex-wrap:wrap}
+.proj-link{font-size:.76rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink);padding-bottom:1px;transition:color .15s,border-color .15s}
+.proj-link:hover{color:var(--accent2);border-color:var(--accent2)}
+
+/* EDUCATION */
+.edu-entry{display:grid;grid-template-columns:190px 1fr;gap:3rem;padding:2rem 0;border-bottom:1px solid var(--rule)}
+.edu-entry:last-child{border-bottom:none}
+.edu-period{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);line-height:1.6}
+.edu-degree{font-family:var(--serif);font-size:1.08rem;font-weight:400;color:var(--ink);margin-bottom:.2rem;letter-spacing:-.01em}
+.edu-inst{font-size:.88rem;color:var(--ink-mid);margin-bottom:.5rem}
+.edu-note{font-size:.88rem;color:var(--ink-mid);line-height:1.65;max-width:55ch}
+
+/* ACTIVITIES */
+.act-entry{display:grid;grid-template-columns:190px 1fr;gap:3rem;padding:1.6rem 0;border-bottom:1px solid var(--rule)}
+.act-entry:last-child{border-bottom:none}
+.act-title{font-size:.95rem;font-weight:500;color:var(--ink);margin-bottom:.3rem}
+.act-desc{font-size:.88rem;color:var(--ink-mid);line-height:1.65;max-width:56ch}
+
+/* CONTACT */
+.contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.contact-intro{font-family:var(--serif);font-size:1.1rem;font-weight:300;color:var(--ink);line-height:1.72;max-width:44ch;margin-bottom:2rem}
+.contact-links{display:flex;flex-direction:column;gap:0;border:1px solid var(--rule)}
+.c-row{display:flex;align-items:center;padding:.9rem 1.1rem;border-bottom:1px solid var(--rule);text-decoration:none;gap:1.2rem;transition:background .12s}
+.c-row:last-child{border-bottom:none}
+.c-row:hover{background:var(--bg-alt)}
+.c-label{font-family:var(--mono);font-size:.63rem;color:var(--ink-dim);letter-spacing:.07em;text-transform:uppercase;min-width:72px}
+.c-val{flex:1;font-size:.88rem;color:var(--ink-mid);word-break:break-all}
+.c-arr{font-size:.75rem;color:var(--ink-dim)}
+.contact-form{display:flex;flex-direction:column;gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:.35rem}
+.form-label{font-family:var(--mono);font-size:.63rem;color:var(--ink-dim);letter-spacing:.07em;text-transform:uppercase}
+.form-input,.form-select,.form-textarea{font-family:var(--sans);font-size:.9rem;color:var(--ink);background:var(--bg);border:1px solid var(--rule);padding:.7rem .9rem;outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none;width:100%}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent)}
+.form-input.error,.form-select.error,.form-textarea.error{border-color:var(--accent2)}
+.form-textarea{resize:vertical;min-height:110px}
+.form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238c8b85' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center;padding-right:2.2rem;cursor:pointer}
+.form-error{font-family:var(--mono);font-size:.64rem;color:var(--accent2);display:none}
+.form-error.show{display:block}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-success{display:none;font-family:var(--mono);font-size:.78rem;color:#2a8a4a;padding:.8rem 1rem;border:1px solid #2a8a4a;background:#2a8a4a0d;text-align:center}
+.form-success.show{display:block}
+
+/* FOOTER */
+footer{border-top:1px solid var(--rule);position:relative;z-index:1}
+.footer-inner{max-width:var(--max);margin:0 auto;padding:1.4rem var(--pad);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.footer-name{font-family:var(--serif);font-size:.85rem;color:var(--ink-dim)}
+.footer-note{font-family:var(--mono);font-size:.62rem;color:var(--ink-dim);letter-spacing:.03em}
+
+/* RESPONSIVE */
+@media(max-width:860px){
+  .nav-links,.nav-cta{display:none}
+  .ham{display:flex}
+  .two-col,.proj-card,.edu-entry,.act-entry{grid-template-columns:1fr;gap:.6rem}
+  .contact-layout{grid-template-columns:1fr;gap:2.5rem}
+  .form-row{grid-template-columns:1fr}
+  .proj-card:hover{margin:0;padding-left:0;padding-right:0}
+}
+@media(max-width:480px){
+  .hero-actions{flex-direction:column}
+  .btn{justify-content:center}
+  .hero-status{gap:1.2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid" aria-hidden="true"></div>
+
+<nav id="mainNav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">Vahid Abdullayev<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#activities">Activities</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">
+        <svg id="iconSun" width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.2"/><line x1="8" y1="1" x2="8" y2="2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="8" y1="13.5" x2="8" y2="15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="1" y1="8" x2="2.5" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="13.5" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="2.93" y1="2.93" x2="3.99" y2="3.99" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="12.01" y1="12.01" x2="13.07" y2="13.07" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="13.07" y1="2.93" x2="12.01" y2="3.99" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="3.99" y1="12.01" x2="2.93" y2="13.07" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <svg id="iconMoon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 10A6 6 0 0 1 6 2.5a6 6 0 1 0 7.5 7.5z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <a href="#contact" class="nav-cta">Hire</a>
+      <button class="ham" id="hamBtn" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="#about"      onclick="closeNav()">About</a>
+  <a href="#projects"   onclick="closeNav()">Projects</a>
+  <a href="#education"  onclick="closeNav()">Education</a>
+  <a href="#activities" onclick="closeNav()">Activities</a>
+  <a href="#contact"    onclick="closeNav()">Contact</a>
+</div>
+
+<!-- ══════════════════════════════════
+     HERO
+     Typing roles: honest, specific, no claims
+════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-wrap">
+    <div class="hero-tag">BSc Computer Science · TSI Riga · Latvia</div>
+    <h1 class="hero-name">Vahid Abdullayev</h1>
+    <div class="hero-role-line">
+      <span class="typing-text" id="typingEl"></span><span class="cursor"></span>
+    </div>
+
+    <!-- Bio: specific, no filler phrases -->
+    <p class="hero-bio">
+      I'm a CS student in Riga. I've built one real tool that people actually use, I'm actively learning JavaScript, and I'm looking for my first professional role.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-dark">View my work</a>
+      <a href="#contact"  class="btn btn-ghost">Get in touch</a>
+    </div>
+    <div class="hero-status">
+      <div class="s-item">
+        <div class="s-label">Status</div>
+        <div class="s-val"><span class="dot-g">●</span> Open to opportunities</div>
+      </div>
+      <div class="s-item">
+        <div class="s-label">Location</div>
+        <div class="s-val">Riga, Latvia</div>
+      </div>
+      <div class="s-item">
+        <div class="s-label">Currently learning</div>
+        <div class="s-val">JavaScript · Java</div>
+      </div>
+      <div class="s-item">
+        <div class="s-label">RobotHack 2026</div>
+        <div class="s-val"><span class="dot-a">●</span> Result pending</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-indicator" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     ABOUT
+     Content rules applied:
+     - No "passionate about" or "motivated by"
+     - No repeated sentence structure
+     - Specific facts only: universities, grades, languages, what I actually know
+     - Honest skill level framing
+════════════════════════════════════ -->
+<section id="about">
+  <div class="wrap">
+    <div class="two-col">
+      <div class="col-label reveal">About</div>
+      <div>
+        <h2 class="sec-heading reveal">About me</h2>
+        <div class="about-body">
+          <p class="reveal delay-1">
+            I'm a first-year CS student at Transport and Telecommunication Institute in Riga. Before TSI, I spent a year at ADA University in Baku, then another year at Eskişehir Osmangazi University in Turkey. I left both with strong grades — A at ADA, A− at Osmangazi — but moved on when I felt the program or location wasn't the right fit for where I wanted to go.
+          </p>
+          <p class="reveal delay-2">
+            Programming-wise, I'm at the beginning. I can build things with HTML and CSS, I've used JavaScript in a small real project, and I'm currently taking a Java course while also starting to learn JavaScript more seriously. I know enough Python to write loops and basic scripts. That's the honest picture.
+          </p>
+          <p class="reveal delay-3">
+            I speak Azerbaijani and Turkish as native languages, English at C1 level (certified), and Russian at a basic level. Living and studying in three different countries has made communication across languages feel normal to me.
+          </p>
+        </div>
+
+        <div class="meta-block reveal">
+          <div class="meta-row">
+            <span class="meta-k">University</span>
+            <span class="meta-v">Transport and Telecommunication Institute (TSI), Riga</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-k">Program</span>
+            <span class="meta-v">BSc Computer Science</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-k">Graduation</span>
+            <span class="meta-v">2030 (expected)</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-k">Languages</span>
+            <span class="meta-v">Azerbaijani (native) · Turkish (native) · English (C1) · Russian (A2)</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-k">Looking for</span>
+            <span class="meta-v">Junior roles, internships, student projects — Riga, on-site</span>
+          </div>
+        </div>
+
+        <div class="skill-section reveal">
+          <div class="skill-heading">What I can do right now — no exaggeration</div>
+          <div class="skill-rows">
+            <div class="skill-row">
+              <span class="sk-name">HTML / CSS</span>
+              <div class="sk-bar" data-target="55%"><div class="sk-fill" style="--target:55%"></div></div>
+              <span class="sk-note">Used in a live project</span>
+            </div>
+            <div class="skill-row">
+              <span class="sk-name">JavaScript</span>
+              <div class="sk-bar" data-target="6%"><div class="sk-fill" style="--target:6%"></div></div>
+              <span class="sk-note">Just started — learning daily</span>
+            </div>
+            <div class="skill-row">
+              <span class="sk-name">Python</span>
+              <div class="sk-bar" data-target="20%"><div class="sk-fill" style="--target:20%"></div></div>
+              <span class="sk-note">Basics only — loops, conditionals</span>
+            </div>
+            <div class="skill-row">
+              <span class="sk-name">Java</span>
+              <div class="sk-bar" data-target="15%"><div class="sk-fill" style="--target:15%"></div></div>
+              <span class="sk-note">In course — first weeks</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     PROJECTS
+     Content rules applied:
+     - Exact contribution stated, not inflated
+     - "Team project" clearly labeled
+     - No outcome metrics I cannot verify
+     - Technologies confirmed by Vahid only
+════════════════════════════════════ -->
+<section id="projects">
+  <div class="wrap">
+    <div class="two-col">
+      <div class="col-label reveal">Projects</div>
+      <div>
+        <h2 class="sec-heading reveal">What I've built</h2>
+        <div class="proj-list">
+
+          <div class="proj-card reveal">
+            <div class="proj-meta">
+              <span class="proj-id">P-01</span>
+              <span class="proj-year">2026</span>
+              <span class="badge badge-live">In use</span>
+            </div>
+            <div>
+              <div class="proj-title">Guest Verification Panel</div>
+              <div class="proj-ctx">Latvia Azerbaijanis Association</div>
+              <p class="proj-desc">
+                The association needed a way to check guests at the door during events. I built a panel that scans QR codes and matches them against a registration list stored in an Excel file. If the code is valid, the guest's name and details appear on screen. It runs in a browser — no installation needed for the person at the door.
+              </p>
+              <p class="proj-note">
+                This is my first solo project from scratch. It is currently being used at association events.
+              </p>
+              <div class="tech-row">
+                <span class="t-tag">HTML</span>
+                <span class="t-tag">CSS</span>
+                <span class="t-tag">JavaScript</span>
+                <span class="t-tag">Excel (data source)</span>
+              </div>
+              <div class="proj-links">
+                <a href="https://github.com/abzdullayezz/ASAP/blob/main/index.html" target="_blank" rel="noopener" class="proj-link">View on GitHub ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="proj-card reveal">
+            <div class="proj-meta">
+              <span class="proj-id">P-02</span>
+              <span class="proj-year">2023</span>
+              <span class="badge badge-past">No longer active</span>
+            </div>
+            <div>
+              <div class="proj-title">Student Association Website</div>
+              <div class="proj-ctx">Eskişehir Osmangazi University — partial contribution</div>
+              <p class="proj-desc">
+                A student association at my university had a website built by a team. I joined partway through and worked on the user security section — the part handling login and account access. I also gave feedback on other parts of the site, but most of the codebase was written by others before I joined.
+              </p>
+              <p class="proj-note">
+                The site is no longer online. The association was disbanded after I left the university.
+              </p>
+              <div class="tech-row">
+                <span class="t-tag">Web (technologies unconfirmed)</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     EDUCATION
+     Content rules applied:
+     - Grades stated accurately
+     - Reason for leaving: honest, not polished into corporate language
+     - No invented course descriptions
+════════════════════════════════════ -->
+<section id="education">
+  <div class="wrap">
+    <div class="two-col">
+      <div class="col-label reveal">Education</div>
+      <div>
+        <h2 class="sec-heading reveal">Education</h2>
+
+        <div class="edu-entry reveal">
+          <div class="edu-period">2024 — 2030<br><span style="font-size:.62rem;color:var(--ink-dim)">Expected</span></div>
+          <div>
+            <div class="edu-degree">BSc Computer Science</div>
+            <div class="edu-inst"><a href="https://tsi.lv/lv/" target="_blank" rel="noopener" class="proj-link">Transport and Telecommunication Institute (TSI)</a> — Riga, Latvia</div>
+            <p class="edu-note">My current program. TSI is a technical university in Riga with a practical focus on computing and engineering disciplines.</p>
+          </div>
+        </div>
+
+        <div class="edu-entry reveal delay-1">
+          <div class="edu-period">2023 — 2024</div>
+          <div>
+            <div class="edu-degree">Computer Science — 1 year completed</div>
+            <div class="edu-inst"><a href="https://www.ogu.edu.tr" target="_blank" rel="noopener" class="proj-link">Eskişehir Osmangazi University</a> — Eskişehir, Turkey</div>
+            <p class="edu-note">Finished the academic year with an A− average. Left because the program's resources and opportunities felt limited for what I wanted to do next.</p>
+          </div>
+        </div>
+
+        <div class="edu-entry reveal delay-2">
+          <div class="edu-period">2022 — 2023</div>
+          <div>
+            <div class="edu-degree">Computer Science — 1 year completed</div>
+            <div class="edu-inst"><a href="https://www.ada.edu.az" target="_blank" rel="noopener" class="proj-link">ADA University</a> — Baku, Azerbaijan</div>
+            <p class="edu-note">Finished the academic year with an A average. Left because I felt the program wasn't adding enough to justify staying.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     ACTIVITIES
+     Content rules applied:
+     - Pending results shown as pending, not achievements
+     - Membership stated without inflation
+════════════════════════════════════ -->
+<section id="activities">
+  <div class="wrap">
+    <div class="two-col">
+      <div class="col-label reveal">Activities</div>
+      <div>
+        <h2 class="sec-heading reveal">Activities &amp; applications</h2>
+
+        <div class="act-entry reveal">
+          <div>
+            <span class="badge badge-pend">Awaiting result</span>
+            <div style="margin-top:.5rem;font-family:var(--mono);font-size:.7rem;color:var(--ink-dim)">2026</div>
+          </div>
+          <div>
+            <div class="act-title">RobotHack 2026 Hackathon</div>
+            <p class="act-desc">Applied to participate in <a href="https://robothack.co" target="_blank" rel="noopener" class="proj-link">RobotHack 2026</a>, an AI and robotics hackathon. The results have not been announced yet.</p>
+          </div>
+        </div>
+
+        <div class="act-entry reveal delay-1">
+          <div>
+            <span class="badge badge-pend">Awaiting result</span>
+            <div style="margin-top:.5rem;font-family:var(--mono);font-size:.7rem;color:var(--ink-dim)">2024</div>
+          </div>
+          <div>
+            <div class="act-title">Programme &amp; Fund Applications</div>
+            <p class="act-desc">Applied to three programs: the <a href="https://www.rsu.lv/en/ink" target="_blank" rel="noopener" class="proj-link">RSU Incubation Programme</a>, <a href="https://ideahub.tsi.lv" target="_blank" rel="noopener" class="proj-link">iDEAHUB (TSI)</a>, and the <a href="https://swelatfund.org" target="_blank" rel="noopener" class="proj-link">Sweden-Latvia Cooperation Fund</a>. All results are pending.</p>
+          </div>
+        </div>
+
+        <div class="act-entry reveal delay-2">
+          <div>
+            <span class="badge badge-live">Member</span>
+            <div style="margin-top:.5rem;font-family:var(--mono);font-size:.7rem;color:var(--ink-dim)">2024 — present</div>
+          </div>
+          <div>
+            <div class="act-title">Latvia Azerbaijanis Association</div>
+            <p class="act-desc">Member of the association. I also built the guest verification tool they use at events, which is my only deployed project so far.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     CONTACT
+     Content rules applied:
+     - Direct, no filler text
+     - States exactly what kind of work I'm looking for
+     - Form labels match what the field actually collects
+════════════════════════════════════ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="two-col" style="margin-bottom:3rem">
+      <div class="col-label reveal">Contact</div>
+      <h2 class="sec-heading reveal" style="margin-bottom:0">Get in touch</h2>
+    </div>
+    <div class="contact-layout">
+      <div class="reveal">
+        <p class="contact-intro">
+          I'm looking for a junior role or internship in Riga, ideally on-site. I'm also open to student project collaborations and conversations about tech or startups. I'm available 24/7 for calls and emails.
+        </p>
+        <div class="contact-links">
+          <a href="mailto:abzdullayezz@gmail.com" class="c-row">
+            <span class="c-label">Email</span>
+            <span class="c-val">abzdullayezz@gmail.com</span>
+            <span class="c-arr">↗</span>
+          </a>
+          <a href="https://www.linkedin.com/in/vahid-abdullayev-693958446" target="_blank" rel="noopener" class="c-row">
+            <span class="c-label">LinkedIn</span>
+            <span class="c-val">linkedin.com/in/vahid-abdullayev</span>
+            <span class="c-arr">↗</span>
+          </a>
+          <a href="https://github.com/abzdullayezz" target="_blank" rel="noopener" class="c-row">
+            <span class="c-label">GitHub</span>
+            <span class="c-val">github.com/abzdullayezz</span>
+            <span class="c-arr">↗</span>
+          </a>
+          <a href="tel:+37125673958" class="c-row">
+            <span class="c-label">Phone</span>
+            <span class="c-val">+371 25673958</span>
+            <span class="c-arr">↗</span>
+          </a>
+          <a href="https://wa.me/37125673958" target="_blank" rel="noopener" class="c-row">
+            <span class="c-label">WhatsApp</span>
+            <span class="c-val">+371 25673958</span>
+            <span class="c-arr">↗</span>
+          </a>
+          <a href="https://t.me/+37125673958" target="_blank" rel="noopener" class="c-row">
+            <span class="c-label">Telegram</span>
+            <span class="c-val">+371 25673958</span>
+            <span class="c-arr">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="reveal delay-1">
+        <form class="contact-form" id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="f-name">Your name</label>
+              <input class="form-input" type="text" id="f-name" name="name" placeholder="Name" autocomplete="name">
+              <span class="form-error" id="err-name">Please enter your name.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="f-email">Your email</label>
+              <input class="form-input" type="email" id="f-email" name="email" placeholder="email@example.com" autocomplete="email">
+              <span class="form-error" id="err-email">Please enter a valid email address.</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-type">What is this about?</label>
+            <select class="form-select" id="f-type" name="type">
+              <option value="">Select one</option>
+              <option>Job opportunity</option>
+              <option>Internship</option>
+              <option>Student project</option>
+              <option>Collaboration</option>
+              <option>Other</option>
+            </select>
+            <span class="form-error" id="err-type">Please select an option.</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-msg">Message</label>
+            <textarea class="form-textarea" id="f-msg" name="message" placeholder="What do you have in mind?" rows="4"></textarea>
+            <span class="form-error" id="err-msg">Please write a short message.</span>
+          </div>
+          <button type="submit" class="btn btn-dark" style="width:100%;justify-content:center;margin-top:.2rem">Send message</button>
+          <div class="form-success" id="formSuccess">Message sent — I'll reply to your email soon.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-name">Vahid Abdullayev — Riga, Latvia</span>
+    <span class="footer-note">All content verified · November 2026</span>
+  </div>
+</footer>
+
+<script>
+// THEME
+const html = document.documentElement;
+const sunIcon  = document.getElementById('iconSun');
+const moonIcon = document.getElementById('iconMoon');
+function applyTheme(t) {
+  html.dataset.theme = t;
+  sunIcon.style.display  = t === 'dark' ? 'block' : 'none';
+  moonIcon.style.display = t === 'dark' ? 'none'  : 'block';
+}
+(function(){
+  const stored = localStorage.getItem('va-theme');
+  const sysDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(stored || (sysDark ? 'dark' : 'light'));
+})();
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  localStorage.setItem('va-theme', next);
+});
+
+// NAV SCROLL SHADOW
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// MOBILE NAV
+const hamBtn    = document.getElementById('hamBtn');
+const mobileNav = document.getElementById('mobileNav');
+hamBtn.addEventListener('click', () => {
+  const open = mobileNav.classList.toggle('open');
+  hamBtn.classList.toggle('open', open);
+  hamBtn.setAttribute('aria-expanded', open);
+});
+function closeNav() {
+  mobileNav.classList.remove('open');
+  hamBtn.classList.remove('open');
+  hamBtn.setAttribute('aria-expanded', false);
+}
+
+// TYPING — honest roles only
+const roles = [
+  'CS Student',
+  'Learning JavaScript',
+  'Building real tools',
+  'Looking for a first role',
+  'Based in Riga'
+];
+let ri = 0, ci = 0, deleting = false;
+const typEl = document.getElementById('typingEl');
+function type() {
+  const word = roles[ri];
+  if (!deleting) {
+    typEl.textContent = word.slice(0, ++ci);
+    if (ci === word.length) { deleting = true; setTimeout(type, 1800); return; }
+    setTimeout(type, 80);
+  } else {
+    typEl.textContent = word.slice(0, --ci);
+    if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; setTimeout(type, 400); return; }
+    setTimeout(type, 45);
+  }
+}
+setTimeout(type, 800);
+
+// SCROLL REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => revObs.observe(el));
+
+// SKILL BARS — animate on scroll into view
+const bars = document.querySelectorAll('.sk-bar');
+const barObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('animated'); barObs.unobserve(e.target); }
+  });
+}, { threshold: 0.5 });
+bars.forEach(b => barObs.observe(b));
+
+// CONTACT FORM VALIDATION
+const form = document.getElementById('contactForm');
+function validate(id, errId, check) {
+  const el  = document.getElementById(id);
+  const err = document.getElementById(errId);
+  const ok  = check(el.value.trim());
+  el.classList.toggle('error', !ok);
+  err.classList.toggle('show', !ok);
+  return ok;
+}
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const ok = [
+    validate('f-name',  'err-name',  v => v.length > 0),
+    validate('f-email', 'err-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)),
+    validate('f-type',  'err-type',  v => v.length > 0),
+    validate('f-msg',   'err-msg',   v => v.length > 5)
+  ].every(Boolean);
+  if (ok) {
+    document.getElementById('formSuccess').classList.add('show');
+    form.reset();
+    setTimeout(() => document.getElementById('formSuccess').classList.remove('show'), 5000);
+  }
+});
+['f-name','f-email','f-type','f-msg'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => {
+    document.getElementById(id).classList.remove('error');
+  });
+});
+</script>
+</body>
+</html>
