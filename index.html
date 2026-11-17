@@ -205,6 +205,9 @@ section:last-of-type{border-bottom:none}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .form-success{display:none;font-family:var(--mono);font-size:.78rem;color:#2a8a4a;padding:.8rem 1rem;border:1px solid #2a8a4a;background:#2a8a4a0d;text-align:center}
 .form-success.show{display:block}
+.form-fail{display:none;font-family:var(--mono);font-size:.78rem;color:var(--accent2);padding:.8rem 1rem;border:1px solid var(--accent2);text-align:center}
+.form-fail.show{display:block}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
 
 /* FOOTER */
 footer{border-top:1px solid var(--rule);position:relative;z-index:1}
@@ -608,7 +611,7 @@ footer{border-top:1px solid var(--rule);position:relative;z-index:1}
       </div>
 
       <div class="reveal delay-1">
-        <form class="contact-form" id="contactForm" novalidate>
+        <form class="contact-form" id="contactForm" action="https://formspree.io/f/mqpqqejl" method="POST" novalidate>
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="f-name">Your name</label>
@@ -638,8 +641,9 @@ footer{border-top:1px solid var(--rule);position:relative;z-index:1}
             <textarea class="form-textarea" id="f-msg" name="message" placeholder="What do you have in mind?" rows="4"></textarea>
             <span class="form-error" id="err-msg">Please write a short message.</span>
           </div>
-          <button type="submit" class="btn btn-dark" style="width:100%;justify-content:center;margin-top:.2rem">Send message</button>
+          <button type="submit" id="sendBtn" class="btn btn-dark" style="width:100%;justify-content:center;margin-top:.2rem">Send message</button>
           <div class="form-success" id="formSuccess">Message sent — I'll reply to your email soon.</div>
+          <div class="form-fail" id="formFail">Could not send the message. Please email me at abzdullayezz@gmail.com instead.</div>
         </form>
       </div>
     </div>
@@ -754,11 +758,30 @@ form.addEventListener('submit', e => {
     validate('f-type',  'err-type',  v => v.length > 0),
     validate('f-msg',   'err-msg',   v => v.length > 5)
   ].every(Boolean);
-  if (ok) {
-    document.getElementById('formSuccess').classList.add('show');
-    form.reset();
-    setTimeout(() => document.getElementById('formSuccess').classList.remove('show'), 5000);
-  }
+  if (!ok) return;
+  const btn = document.getElementById('sendBtn');
+  const okBox = document.getElementById('formSuccess');
+  const failBox = document.getElementById('formFail');
+  okBox.classList.remove('show');
+  failBox.classList.remove('show');
+  btn.disabled = true;
+  fetch(form.action, {
+    method: 'POST',
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  }).then(res => {
+    if (res.ok) {
+      okBox.classList.add('show');
+      form.reset();
+      setTimeout(() => okBox.classList.remove('show'), 8000);
+    } else {
+      failBox.classList.add('show');
+    }
+  }).catch(() => {
+    failBox.classList.add('show');
+  }).finally(() => {
+    btn.disabled = false;
+  });
 });
 ['f-name','f-email','f-type','f-msg'].forEach(id => {
   document.getElementById(id).addEventListener('input', () => {
